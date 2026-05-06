@@ -20,8 +20,8 @@ namespace pryZarateSP3._2
         // Paleta UX
         private static readonly Color CLR_BG          = Color.FromArgb(248, 250, 252);
         private static readonly Color CLR_SIDEBAR     = Color.FromArgb(15, 23, 42);
-        private static readonly Color CLR_SIDEBAR_HOV = Color.FromArgb(30, 41, 59);
-        private static readonly Color CLR_SIDEBAR_TXT = Color.FromArgb(203, 213, 225);
+        private static readonly Color CLR_SIDEBAR_CARD = Color.FromArgb(30, 41, 59);
+        private static readonly Color CLR_SIDEBAR_MUTED = Color.FromArgb(148, 163, 184);
         private static readonly Color CLR_TEXT        = Color.FromArgb(15, 23, 42);
         private static readonly Color CLR_TEXT_SOFT   = Color.FromArgb(100, 116, 139);
         private static readonly Color CLR_BORDER      = Color.FromArgb(226, 232, 240);
@@ -33,10 +33,23 @@ namespace pryZarateSP3._2
         private Panel pnlSidebar;
         private Label lblBrand;
         private Label lblBrandSub;
-        private Label lblNavSection;
-        private Guna2Button btnNavMaquinas;
-        private Guna2Button btnNavOrdenes;
-        private Guna2Button btnNavConsulta;
+        private Label lblResumenTitle;
+
+        private Guna2Panel statMaquinas;
+        private Label lblStatMaquinasCaption;
+        private Label lblStatMaquinasValue;
+        private Label lblStatMaquinasUnit;
+
+        private Guna2Panel statOrdenes;
+        private Label lblStatOrdenesCaption;
+        private Label lblStatOrdenesValue;
+        private Label lblStatOrdenesUnit;
+
+        private Guna2Panel statHoras;
+        private Label lblStatHorasCaption;
+        private Label lblStatHorasValue;
+        private Label lblStatHorasUnit;
+
         private Label lblVersion;
 
         private Panel pnlMain;
@@ -91,33 +104,33 @@ namespace pryZarateSP3._2
                 Location = new Point(29, 70),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 9F),
-                ForeColor = Color.FromArgb(148, 163, 184),
+                ForeColor = CLR_SIDEBAR_MUTED,
                 BackColor = Color.Transparent
             };
             pnlSidebar.Controls.Add(lblBrandSub);
 
-            lblNavSection = new Label
+            lblResumenTitle = new Label
             {
-                Text = "MENÚ",
-                Location = new Point(29, 124),
+                Text = "RESUMEN",
+                Location = new Point(29, 130),
                 AutoSize = true,
                 Font = new Font("Segoe UI Semibold", 7.5F),
                 ForeColor = Color.FromArgb(100, 116, 139),
                 BackColor = Color.Transparent
             };
-            pnlSidebar.Controls.Add(lblNavSection);
+            pnlSidebar.Controls.Add(lblResumenTitle);
 
-            btnNavMaquinas = BuildNavButton("Máquinas inyectoras", 152);
-            btnNavOrdenes  = BuildNavButton("Órdenes de producción", 204);
-            btnNavConsulta = BuildNavButton("Consulta por máquina", 256);
+            BuildStatCard(out statMaquinas, out lblStatMaquinasCaption, out lblStatMaquinasValue,
+                out lblStatMaquinasUnit, 158, "MÁQUINAS REGISTRADAS", "máquinas", CLR_INDIGO);
+            pnlSidebar.Controls.Add(statMaquinas);
 
-            btnNavMaquinas.Click += btnMaquinas_Click;
-            btnNavOrdenes.Click  += btnOrdenes_Click;
-            btnNavConsulta.Click += btnConsulta_Click;
+            BuildStatCard(out statOrdenes, out lblStatOrdenesCaption, out lblStatOrdenesValue,
+                out lblStatOrdenesUnit, 254, "ÓRDENES CARGADAS", "órdenes", CLR_EMERALD);
+            pnlSidebar.Controls.Add(statOrdenes);
 
-            pnlSidebar.Controls.Add(btnNavMaquinas);
-            pnlSidebar.Controls.Add(btnNavOrdenes);
-            pnlSidebar.Controls.Add(btnNavConsulta);
+            BuildStatCard(out statHoras, out lblStatHorasCaption, out lblStatHorasValue,
+                out lblStatHorasUnit, 350, "HORAS TRABAJADAS", "hs totales", CLR_AMBER);
+            pnlSidebar.Controls.Add(statHoras);
 
             lblVersion = new Label
             {
@@ -215,28 +228,59 @@ namespace pryZarateSP3._2
             pnlMain.Controls.Add(lblFooter);
         }
 
-        private Guna2Button BuildNavButton(string text, int top)
+        private void BuildStatCard(out Guna2Panel card, out Label lblCaption, out Label lblValue,
+            out Label lblUnit, int top, string caption, string unit, Color accent)
         {
-            var b = new Guna2Button
+            card = new Guna2Panel
             {
-                Text = text,
-                TextAlign = HorizontalAlignment.Left,
-                Location = new Point(16, top),
-                Size = new Size(208, 44),
-                BorderRadius = 8,
-                BorderThickness = 0,
-                FillColor = CLR_SIDEBAR,
-                ForeColor = CLR_SIDEBAR_TXT,
-                Font = new Font("Segoe UI", 10F),
-                Cursor = Cursors.Hand
+                Location = new Point(20, top),
+                Size = new Size(200, 80),
+                FillColor = CLR_SIDEBAR_CARD,
+                BorderRadius = 12,
+                BorderThickness = 0
             };
-            b.HoverState.FillColor = CLR_SIDEBAR_HOV;
-            b.HoverState.ForeColor = CLR_WHITE;
-            b.HoverState.BorderColor = CLR_SIDEBAR_HOV;
-            b.PressedColor = Color.FromArgb(51, 65, 85);
-            b.PressedDepth = 0;
-            b.Padding = new Padding(16, 0, 0, 0);
-            return b;
+
+            // Acento lateral izquierdo (3px)
+            var leftAccent = new Panel
+            {
+                Location = new Point(0, 16),
+                Size = new Size(3, 48),
+                BackColor = accent
+            };
+            card.Controls.Add(leftAccent);
+
+            lblCaption = new Label
+            {
+                Text = caption,
+                Location = new Point(16, 12),
+                AutoSize = true,
+                Font = new Font("Segoe UI Semibold", 7.5F),
+                ForeColor = CLR_SIDEBAR_MUTED,
+                BackColor = Color.Transparent
+            };
+            card.Controls.Add(lblCaption);
+
+            lblValue = new Label
+            {
+                Text = "0",
+                Location = new Point(14, 28),
+                AutoSize = true,
+                Font = new Font("Segoe UI Semibold", 22F),
+                ForeColor = CLR_WHITE,
+                BackColor = Color.Transparent
+            };
+            card.Controls.Add(lblValue);
+
+            lblUnit = new Label
+            {
+                Text = unit,
+                Location = new Point(60, 50),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 8.5F),
+                ForeColor = CLR_SIDEBAR_MUTED,
+                BackColor = Color.Transparent
+            };
+            card.Controls.Add(lblUnit);
         }
 
         private void BuildCard(out Guna2Panel card, out Guna2Button btn,
@@ -254,7 +298,6 @@ namespace pryZarateSP3._2
             };
             card.ShadowDecoration.Enabled = false;
 
-            // Barra superior de acento (4px alto en color de la sección)
             var topAccent = new Panel
             {
                 Location = new Point(20, 20),
@@ -299,5 +342,10 @@ namespace pryZarateSP3._2
             btn.HoverState.FillColor = ControlPaint.Dark(accent, 0.08f);
             card.Controls.Add(btn);
         }
+
+        // expuesto al code-behind para refrescar
+        internal Label LblStatMaquinasValue { get { return lblStatMaquinasValue; } }
+        internal Label LblStatOrdenesValue { get { return lblStatOrdenesValue; } }
+        internal Label LblStatHorasValue { get { return lblStatHorasValue; } }
     }
 }

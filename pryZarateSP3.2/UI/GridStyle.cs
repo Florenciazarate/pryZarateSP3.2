@@ -10,8 +10,7 @@ namespace pryZarateSP3._2.UI
         private static readonly Color CLR_TEXT_SOFT = Color.FromArgb(100, 116, 139);
         private static readonly Color CLR_BORDER    = Color.FromArgb(226, 232, 240);
         private static readonly Color CLR_HEADER    = Color.FromArgb(241, 245, 249);
-        private static readonly Color CLR_SELECT    = Color.FromArgb(238, 242, 255);
-        private static readonly Color CLR_INDIGO    = Color.FromArgb(79, 70, 229);
+        private static readonly Color CLR_SELECT    = Color.FromArgb(241, 245, 249);
 
         public static void Apply(Guna2DataGridView grid)
         {
@@ -41,16 +40,19 @@ namespace pryZarateSP3._2.UI
             grid.DefaultCellStyle.BackColor = Color.White;
             grid.DefaultCellStyle.ForeColor = CLR_TEXT;
             grid.DefaultCellStyle.SelectionBackColor = CLR_SELECT;
-            grid.DefaultCellStyle.SelectionForeColor = CLR_INDIGO;
+            grid.DefaultCellStyle.SelectionForeColor = CLR_TEXT;
             grid.DefaultCellStyle.Padding = new Padding(8, 0, 8, 0);
             grid.RowTemplate.Height = 40;
+
+            grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = CLR_HEADER;
+            grid.ColumnHeadersDefaultCellStyle.SelectionForeColor = CLR_TEXT_SOFT;
 
             grid.ThemeStyle.HeaderStyle.BackColor = CLR_HEADER;
             grid.ThemeStyle.HeaderStyle.ForeColor = CLR_TEXT_SOFT;
             grid.ThemeStyle.HeaderStyle.Height = 40;
             grid.ThemeStyle.RowsStyle.Height = 40;
             grid.ThemeStyle.RowsStyle.SelectionBackColor = CLR_SELECT;
-            grid.ThemeStyle.RowsStyle.SelectionForeColor = CLR_INDIGO;
+            grid.ThemeStyle.RowsStyle.SelectionForeColor = CLR_TEXT;
         }
     }
 }
