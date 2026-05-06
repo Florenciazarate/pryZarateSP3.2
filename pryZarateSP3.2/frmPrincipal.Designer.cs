@@ -21,6 +21,7 @@ namespace pryZarateSP3._2
         private static readonly Color CLR_BG          = Color.FromArgb(248, 250, 252);
         private static readonly Color CLR_SIDEBAR     = Color.FromArgb(15, 23, 42);
         private static readonly Color CLR_SIDEBAR_HOV = Color.FromArgb(30, 41, 59);
+        private static readonly Color CLR_SIDEBAR_TXT = Color.FromArgb(203, 213, 225);
         private static readonly Color CLR_TEXT        = Color.FromArgb(15, 23, 42);
         private static readonly Color CLR_TEXT_SOFT   = Color.FromArgb(100, 116, 139);
         private static readonly Color CLR_BORDER      = Color.FromArgb(226, 232, 240);
@@ -29,9 +30,10 @@ namespace pryZarateSP3._2
         private static readonly Color CLR_AMBER       = Color.FromArgb(245, 158, 11);
         private static readonly Color CLR_WHITE       = Color.White;
 
-        private Guna2Panel pnlSidebar;
+        private Panel pnlSidebar;
         private Label lblBrand;
         private Label lblBrandSub;
+        private Label lblNavSection;
         private Guna2Button btnNavMaquinas;
         private Guna2Button btnNavOrdenes;
         private Guna2Button btnNavConsulta;
@@ -43,21 +45,10 @@ namespace pryZarateSP3._2
         private Label lblSubtitle;
 
         private Guna2Panel cardMaquinas;
-        private Label lblCardMaquinasIcon;
-        private Label lblCardMaquinasTitle;
-        private Label lblCardMaquinasDesc;
-        private Guna2Button btnMaquinas;
-
         private Guna2Panel cardOrdenes;
-        private Label lblCardOrdenesIcon;
-        private Label lblCardOrdenesTitle;
-        private Label lblCardOrdenesDesc;
-        private Guna2Button btnOrdenes;
-
         private Guna2Panel cardConsulta;
-        private Label lblCardConsultaIcon;
-        private Label lblCardConsultaTitle;
-        private Label lblCardConsultaDesc;
+        private Guna2Button btnMaquinas;
+        private Guna2Button btnOrdenes;
         private Guna2Button btnConsulta;
 
         private Label lblFooter;
@@ -65,8 +56,8 @@ namespace pryZarateSP3._2
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1120, 680);
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.ClientSize = new Size(1120, 680);
             this.Text = "TodoPlast — Sistema de Producción";
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -75,19 +66,18 @@ namespace pryZarateSP3._2
             this.Font = new Font("Segoe UI", 9F);
 
             // ============ SIDEBAR ============
-            pnlSidebar = new Guna2Panel
+            pnlSidebar = new Panel
             {
                 Location = new Point(0, 0),
                 Size = new Size(240, 680),
-                FillColor = CLR_SIDEBAR,
-                BorderRadius = 0
+                BackColor = CLR_SIDEBAR
             };
             this.Controls.Add(pnlSidebar);
 
             lblBrand = new Label
             {
                 Text = "TodoPlast",
-                Location = new Point(28, 32),
+                Location = new Point(28, 36),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 18F, FontStyle.Bold),
                 ForeColor = CLR_WHITE,
@@ -98,7 +88,7 @@ namespace pryZarateSP3._2
             lblBrandSub = new Label
             {
                 Text = "Área de Producción",
-                Location = new Point(29, 66),
+                Location = new Point(29, 70),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 9F),
                 ForeColor = Color.FromArgb(148, 163, 184),
@@ -106,9 +96,20 @@ namespace pryZarateSP3._2
             };
             pnlSidebar.Controls.Add(lblBrandSub);
 
-            btnNavMaquinas = BuildNavButton("Máquinas inyectoras", 130);
-            btnNavOrdenes  = BuildNavButton("Órdenes de producción", 184);
-            btnNavConsulta = BuildNavButton("Consulta por máquina", 238);
+            lblNavSection = new Label
+            {
+                Text = "MENÚ",
+                Location = new Point(29, 124),
+                AutoSize = true,
+                Font = new Font("Segoe UI Semibold", 7.5F),
+                ForeColor = Color.FromArgb(100, 116, 139),
+                BackColor = Color.Transparent
+            };
+            pnlSidebar.Controls.Add(lblNavSection);
+
+            btnNavMaquinas = BuildNavButton("Máquinas inyectoras", 152);
+            btnNavOrdenes  = BuildNavButton("Órdenes de producción", 204);
+            btnNavConsulta = BuildNavButton("Consulta por máquina", 256);
 
             btnNavMaquinas.Click += btnMaquinas_Click;
             btnNavOrdenes.Click  += btnOrdenes_Click;
@@ -178,28 +179,25 @@ namespace pryZarateSP3._2
             int gap   = 24;
             int firstX = 48;
 
-            BuildCard(out cardMaquinas, out lblCardMaquinasIcon, out lblCardMaquinasTitle,
-                out lblCardMaquinasDesc, out btnMaquinas,
+            BuildCard(out cardMaquinas, out btnMaquinas,
                 firstX, cardY, cardW, cardH,
-                CLR_INDIGO, "⚙", "Máquinas",
+                CLR_INDIGO, "Máquinas",
                 "Registrá nuevas máquinas inyectoras, listalas y eliminá las que ya no estén operativas.",
                 "Administrar máquinas");
             btnMaquinas.Click += btnMaquinas_Click;
             pnlMain.Controls.Add(cardMaquinas);
 
-            BuildCard(out cardOrdenes, out lblCardOrdenesIcon, out lblCardOrdenesTitle,
-                out lblCardOrdenesDesc, out btnOrdenes,
+            BuildCard(out cardOrdenes, out btnOrdenes,
                 firstX + (cardW + gap), cardY, cardW, cardH,
-                CLR_EMERALD, "📋", "Órdenes",
+                CLR_EMERALD, "Órdenes",
                 "Cargá las órdenes de producción asignándolas a una máquina y definiendo las horas de trabajo.",
                 "Registrar órdenes");
             btnOrdenes.Click += btnOrdenes_Click;
             pnlMain.Controls.Add(cardOrdenes);
 
-            BuildCard(out cardConsulta, out lblCardConsultaIcon, out lblCardConsultaTitle,
-                out lblCardConsultaDesc, out btnConsulta,
+            BuildCard(out cardConsulta, out btnConsulta,
                 firstX + 2 * (cardW + gap), cardY, cardW, cardH,
-                CLR_AMBER, "📊", "Consulta",
+                CLR_AMBER, "Consulta",
                 "Consultá las órdenes registradas para cada máquina y revisá el total de horas trabajadas.",
                 "Ver consulta");
             btnConsulta.Click += btnConsulta_Click;
@@ -221,27 +219,29 @@ namespace pryZarateSP3._2
         {
             var b = new Guna2Button
             {
-                Text = "   " + text,
+                Text = text,
                 TextAlign = HorizontalAlignment.Left,
                 Location = new Point(16, top),
                 Size = new Size(208, 44),
                 BorderRadius = 8,
-                FillColor = Color.Transparent,
-                ForeColor = Color.FromArgb(226, 232, 240),
+                BorderThickness = 0,
+                FillColor = CLR_SIDEBAR,
+                ForeColor = CLR_SIDEBAR_TXT,
                 Font = new Font("Segoe UI", 10F),
                 Cursor = Cursors.Hand
             };
             b.HoverState.FillColor = CLR_SIDEBAR_HOV;
             b.HoverState.ForeColor = CLR_WHITE;
+            b.HoverState.BorderColor = CLR_SIDEBAR_HOV;
             b.PressedColor = Color.FromArgb(51, 65, 85);
             b.PressedDepth = 0;
+            b.Padding = new Padding(16, 0, 0, 0);
             return b;
         }
 
-        private void BuildCard(out Guna2Panel card, out Label lblIcon, out Label lblTitleC,
-            out Label lblDesc, out Guna2Button btn,
+        private void BuildCard(out Guna2Panel card, out Guna2Button btn,
             int x, int y, int w, int h,
-            Color accent, string icon, string title, string desc, string btnText)
+            Color accent, string title, string desc, string btnText)
         {
             card = new Guna2Panel
             {
@@ -252,46 +252,33 @@ namespace pryZarateSP3._2
                 BorderThickness = 1,
                 BorderRadius = 14
             };
-            card.ShadowDecoration.Enabled = true;
+            card.ShadowDecoration.Enabled = false;
 
-            var pnlIcon = new Guna2Panel
+            // Barra superior de acento (4px alto en color de la sección)
+            var topAccent = new Panel
             {
                 Location = new Point(20, 20),
-                Size = new Size(56, 56),
-                FillColor = Color.FromArgb(28, accent),
-                BorderRadius = 14
+                Size = new Size(40, 4),
+                BackColor = accent
             };
-            card.Controls.Add(pnlIcon);
+            card.Controls.Add(topAccent);
 
-            lblIcon = new Label
-            {
-                Text = icon,
-                Font = new Font("Segoe UI Emoji", 20F),
-                ForeColor = accent,
-                AutoSize = false,
-                Size = new Size(56, 56),
-                Location = new Point(0, 0),
-                TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.Transparent
-            };
-            pnlIcon.Controls.Add(lblIcon);
-
-            lblTitleC = new Label
+            var lblTitleC = new Label
             {
                 Text = title,
-                Location = new Point(20, 96),
+                Location = new Point(20, 44),
                 AutoSize = true,
-                Font = new Font("Segoe UI Semibold", 15F),
+                Font = new Font("Segoe UI Semibold", 16F),
                 ForeColor = CLR_TEXT,
                 BackColor = Color.Transparent
             };
             card.Controls.Add(lblTitleC);
 
-            lblDesc = new Label
+            var lblDesc = new Label
             {
                 Text = desc,
-                Location = new Point(20, 130),
-                Size = new Size(w - 40, 90),
+                Location = new Point(20, 86),
+                Size = new Size(w - 40, 110),
                 Font = new Font("Segoe UI", 9.5F),
                 ForeColor = CLR_TEXT_SOFT,
                 BackColor = Color.Transparent
@@ -309,7 +296,7 @@ namespace pryZarateSP3._2
                 Font = new Font("Segoe UI Semibold", 9.5F),
                 Cursor = Cursors.Hand
             };
-            btn.HoverState.FillColor = ControlPaint.Dark(accent, 0.05f);
+            btn.HoverState.FillColor = ControlPaint.Dark(accent, 0.08f);
             card.Controls.Add(btn);
         }
     }
